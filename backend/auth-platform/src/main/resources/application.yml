@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: auth-platform
+
+server:
+  port: 8081
