@@ -31,4 +31,24 @@ public class AuthService {
 
         userRepository.save(user);
     }
+
+    public LoginResponse login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() ->
+                        new RuntimeException("Invalid credentials"));
+
+        boolean matches = passwordEncoder.matches(
+                request.password(),
+                user.getPasswordHash()
+        );
+
+        if (!matches) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        return new LoginResponse(
+                "Login successful"
+        );
+    }
 }

@@ -17,4 +17,11 @@ public class AuthController {
 
         authService.signup(request);
     }
+
+    @PostMapping("/login")
+    public LoginResponse login(
+            @RequestBody LoginRequest request
+    ) {
+        return authService.login(request);
+    }
 }
