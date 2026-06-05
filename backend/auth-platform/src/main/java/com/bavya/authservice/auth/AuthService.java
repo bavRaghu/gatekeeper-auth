@@ -3,11 +3,15 @@ package com.bavya.authservice.auth;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
+    private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
 
@@ -21,8 +25,9 @@ public class AuthService {
 
         user.setEmail(request.email());
 
-        // temporary
-        user.setPasswordHash(request.password());
+        user.setPasswordHash(
+                passwordEncoder.encode(request.password())
+        );
 
         userRepository.save(user);
     }
