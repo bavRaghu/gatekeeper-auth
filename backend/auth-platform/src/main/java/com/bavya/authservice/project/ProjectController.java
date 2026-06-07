@@ -33,4 +33,13 @@ public class ProjectController {
                 request
         );
     }
+
+    @GetMapping("/{projectId}/members")
+    public List<MemberResponse> getMembers(
+            @PathVariable Long projectId
+    ) {
+        return projectService.getMembers(
+                projectId
+        );
+    }
 }

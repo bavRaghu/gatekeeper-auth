@@ -164,4 +164,38 @@ public class ProjectService {
         projectMemberRepository
                 .save(membership);
     }
+
+    public List<MemberResponse> getMembers(
+            Long projectId
+    ) {
+        System.out.println("GET MEMBERS HIT");
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        User currentUser =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow();
+
+        getMembership(
+                projectId,
+                currentUser
+        );
+
+        return projectMemberRepository
+                .findByProjectId(projectId)
+                .stream()
+                .map(member ->
+                        new MemberResponse(
+                                member.getUser().getId(),
+                                member.getUser().getEmail(),
+                                member.getRole()
+                        )
+                )
+                .toList();
+    }
 }
