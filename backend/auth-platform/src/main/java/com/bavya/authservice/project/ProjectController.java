@@ -1,14 +1,24 @@
 package com.bavya.authservice.project;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/projects")
+@RequiredArgsConstructor
 public class ProjectController {
 
-    @GetMapping("/api/projects")
-    public String projects() {
+    private final ProjectService projectService;
 
-        return "Protected Projects Endpoint";
+    @GetMapping
+    public String test() {
+        return "Projects endpoint working";
+    }
+
+    @PostMapping
+    public ProjectResponse createProject(
+            @RequestBody CreateProjectRequest request
+    ) {
+        return projectService.createProject(request);
     }
 }
