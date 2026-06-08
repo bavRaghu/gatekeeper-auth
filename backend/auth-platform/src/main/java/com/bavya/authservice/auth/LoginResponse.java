@@ -1,6 +1,7 @@
 package com.bavya.authservice.auth;
 
 public record LoginResponse(
-        String token
+        String accessToken,
+        String refreshToken
 ) {
 }

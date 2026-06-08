@@ -1,6 +1,8 @@
 package com.bavya.authservice.auth;
 
 import com.bavya.authservice.jwt.JwtService;
+import com.bavya.authservice.tokens.RefreshTokenService;
+import com.bavya.authservice.tokens.RefreshTokens;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     public void signup(SignupRequest request) {
 
@@ -50,12 +53,19 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String token =
+        String accessToken =
                 jwtService.generateToken(
                         user.getEmail()
                 );
 
-        return new LoginResponse(token);
+        RefreshTokens refreshToken =
+                refreshTokenService
+                        .createToken(user);
+
+        return new LoginResponse(
+                accessToken,
+                refreshToken.getToken()
+        );
     }
 
     public MeResponse me() {
