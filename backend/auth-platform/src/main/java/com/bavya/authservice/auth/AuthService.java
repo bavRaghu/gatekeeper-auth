@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -77,5 +78,39 @@ public class AuthService {
                         .getName();
 
         return new MeResponse(email);
+    }
+
+    public LoginResponse refresh(
+            RefreshRequest request
+    ) {
+
+        RefreshTokens refreshToken =
+                refreshTokenService
+                        .verifyToken(
+                                request.refreshToken()
+                        );
+
+        String accessToken =
+                jwtService.generateToken(
+                        refreshToken
+                                .getUser()
+                                .getEmail()
+                );
+
+        return new LoginResponse(
+                accessToken,
+                refreshToken.getToken()
+        );
+    }
+
+    @Transactional
+    public void logout(
+            LogoutRequest request
+    ) {
+
+        refreshTokenService
+                .deleteToken(
+                        request.refreshToken()
+                );
     }
 }

@@ -29,4 +29,18 @@ public class AuthController {
     public MeResponse me() {
         return authService.me();
     }
+
+    @PostMapping("/refresh")
+    public LoginResponse refresh(
+            @RequestBody RefreshRequest request
+    ) {
+        return authService.refresh(request);
+    }
+
+    @PostMapping("/logout")
+    public void logout(
+            @RequestBody LogoutRequest request
+    ) {
+        authService.logout(request);
+    }
 }
