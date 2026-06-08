@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.*;
 
 import java.util.UUID;
 
@@ -93,5 +94,48 @@ public class ApiKeyService {
                 apiKey.getName(),
                 rawKey
         );
+    }
+
+    public List<ApiKeySummaryResponse> getApiKeys(
+            Long projectId
+    ) {
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        User currentUser =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow();
+
+        projectMemberRepository
+                .findByProjectIdAndUser(
+                        projectId,
+                        currentUser
+                )
+                .orElseThrow(
+                        () -> new RuntimeException(
+                                "Not a member of project"
+                        )
+                );
+
+        Project project =
+                projectRepository
+                        .findById(projectId)
+                        .orElseThrow();
+
+        return apiKeyRepository
+                .findByProject(project)
+                .stream()
+                .map(key ->
+                        new ApiKeySummaryResponse(
+                                key.getId(),
+                                key.getName()
+                        )
+                )
+                .toList();
     }
 }

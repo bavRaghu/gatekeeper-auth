@@ -3,6 +3,8 @@ package com.bavya.authservice.apikey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
@@ -18,5 +20,14 @@ public class ApiKeyController {
                 projectId,
                 request
         );
+    }
+
+    @GetMapping("/{projectId}/api-keys")
+    public List<ApiKeySummaryResponse> getApiKeys(
+            @PathVariable Long projectId
+    ) {
+
+        return apiKeyService
+                .getApiKeys(projectId);
     }
 }
