@@ -8,6 +8,8 @@ import java.util.List;
 public interface ApiKeyRepository
         extends JpaRepository<ApiKey, Long> {
 
+    List<ApiKey> findAll();
+
     List<ApiKey> findByProject(
             Project project
     );

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 import java.util.UUID;
@@ -178,5 +180,36 @@ public class ApiKeyService {
                         .orElseThrow();
 
         apiKeyRepository.delete(apiKey);
+    }
+
+    public Project validateApiKey(
+            String rawKey
+    ) {
+
+        List<ApiKey> apiKeys =
+                apiKeyRepository.findAll();
+
+        for (ApiKey apiKey : apiKeys) {
+
+            if (
+                    passwordEncoder.matches(
+                            rawKey,
+                            apiKey.getKeyHash()
+                    )
+            ) {
+
+                apiKey.setLastUsedAt(
+                        LocalDateTime.now()
+                );
+
+                apiKeyRepository.save(apiKey);
+
+                return apiKey.getProject();
+            }
+        }
+
+        throw new RuntimeException(
+                "Invalid API key"
+        );
     }
 }
