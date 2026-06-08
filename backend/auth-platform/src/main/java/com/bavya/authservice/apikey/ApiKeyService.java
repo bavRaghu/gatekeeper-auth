@@ -4,6 +4,7 @@ import com.bavya.authservice.apikey.*;
 import com.bavya.authservice.project.*;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -137,5 +138,45 @@ public class ApiKeyService {
                         )
                 )
                 .toList();
+    }
+
+    @Transactional
+    public void deleteApiKey(
+            Long projectId,
+            Long apiKeyId
+    ) {
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        User currentUser =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow();
+
+        ProjectMember membership =
+                projectMemberRepository
+                        .findByProjectIdAndUser(
+                                projectId,
+                                currentUser
+                        )
+                        .orElseThrow();
+
+        if (membership.getRole() != Role.OWNER) {
+
+            throw new RuntimeException(
+                    "Only owners can delete API keys"
+            );
+        }
+
+        ApiKey apiKey =
+                apiKeyRepository
+                        .findById(apiKeyId)
+                        .orElseThrow();
+
+        apiKeyRepository.delete(apiKey);
     }
 }

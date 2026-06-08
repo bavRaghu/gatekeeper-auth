@@ -30,4 +30,16 @@ public class ApiKeyController {
         return apiKeyService
                 .getApiKeys(projectId);
     }
+
+    @DeleteMapping("/{projectId}/api-keys/{apiKeyId}")
+    public void deleteApiKey(
+            @PathVariable Long projectId,
+            @PathVariable Long apiKeyId
+    ) {
+
+        apiKeyService.deleteApiKey(
+                projectId,
+                apiKeyId
+        );
+    }
 }
