@@ -86,7 +86,7 @@ public class AuthService {
 
         RefreshTokens refreshToken =
                 refreshTokenService
-                        .verifyToken(
+                        .rotateToken(
                                 request.refreshToken()
                         );
 

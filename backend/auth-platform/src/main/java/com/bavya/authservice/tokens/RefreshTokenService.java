@@ -3,6 +3,7 @@ package com.bavya.authservice.tokens;
 import com.bavya.authservice.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -73,5 +74,21 @@ public class RefreshTokenService {
 
         refreshTokenRepository
                 .deleteByToken(token);
+    }
+
+    @Transactional
+    public RefreshTokens rotateToken(
+            String token
+    ) {
+
+        RefreshTokens oldToken =
+                verifyToken(token);
+
+        refreshTokenRepository
+                .delete(oldToken);
+
+        return createToken(
+                oldToken.getUser()
+        );
     }
 }
