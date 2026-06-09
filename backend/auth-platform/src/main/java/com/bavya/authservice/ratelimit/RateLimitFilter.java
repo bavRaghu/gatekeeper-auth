@@ -1,30 +1,22 @@
-package com.bavya.authservice.apikey;
+package com.bavya.authservice.ratelimit;
 
-import com.bavya.authservice.project.Project;
-import com.bavya.authservice.ratelimit.RateLimitService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
-public class ApiKeyAuthenticationFilter
+@RequiredArgsConstructor
+public class RateLimitFilter
         extends OncePerRequestFilter {
 
-    private final ApiKeyService apiKeyService;
     private final RateLimitService rateLimitService;
-
-    public ApiKeyAuthenticationFilter(
-            ApiKeyService apiKeyService, RateLimitService rateLimitService
-    ) {
-        this.apiKeyService = apiKeyService;
-        this.rateLimitService = rateLimitService;
-    }
 
     @Override
     protected void doFilterInternal(
@@ -55,22 +47,6 @@ public class ApiKeyAuthenticationFilter
                         );
 
                 return;
-            }
-
-            try {
-
-                Project project =
-                        apiKeyService
-                                .validateApiKey(
-                                        apiKey
-                                );
-
-                request.setAttribute(
-                        "project",
-                        project
-                );
-
-            } catch (Exception ignored) {
             }
         }
 

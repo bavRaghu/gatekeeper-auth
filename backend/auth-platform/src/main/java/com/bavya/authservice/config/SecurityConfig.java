@@ -2,6 +2,7 @@ package com.bavya.authservice.config;
 
 import com.bavya.authservice.apikey.ApiKeyAuthenticationFilter;
 import com.bavya.authservice.jwt.JwtAuthenticationFilter;
+import com.bavya.authservice.ratelimit.RateLimitFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,11 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final ApiKeyAuthenticationFilter apiKeyAuthenticationFilter;
+    private final RateLimitFilter rateLimitFilter;
 
-
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, ApiKeyAuthenticationFilter apiKeyAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, ApiKeyAuthenticationFilter apiKeyAuthenticationFilter, RateLimitFilter rateLimitFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.apiKeyAuthenticationFilter = apiKeyAuthenticationFilter;
+        this.rateLimitFilter = rateLimitFilter;
     }
 
     @Bean
@@ -48,6 +50,11 @@ public class SecurityConfig {
         http.addFilterBefore(
                 apiKeyAuthenticationFilter,
                 JwtAuthenticationFilter.class
+        );
+
+        http.addFilterBefore(
+                rateLimitFilter,
+                ApiKeyAuthenticationFilter.class
         );
 
         return http.build();
