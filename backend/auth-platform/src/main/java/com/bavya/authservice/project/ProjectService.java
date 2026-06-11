@@ -1,5 +1,6 @@
 package com.bavya.authservice.project;
 
+import com.bavya.authservice.audit.AuditLogService;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final AuditLogService auditLogService;
 
     public ProjectResponse createProject(
             CreateProjectRequest request
@@ -44,6 +46,13 @@ public class ProjectService {
         membership.setRole(Role.OWNER);
 
         projectMemberRepository.save(membership);
+
+        auditLogService.log(
+                owner,
+                project,
+                "PROJECT_CREATED",
+                project.getName()
+        );
 
         return new ProjectResponse(
                 project.getId(),
@@ -163,6 +172,13 @@ public class ProjectService {
 
         projectMemberRepository
                 .save(membership);
+
+        auditLogService.log(
+                currentUser,
+                project,
+                "MEMBER_ADDED",
+                targetUser.getEmail()
+        );
     }
 
     public List<MemberResponse> getMembers(
@@ -233,8 +249,20 @@ public class ProjectService {
                 request.role()
         );
 
+        Project project =
+                projectRepository
+                        .findById(projectId)
+                        .orElseThrow();
+
         projectMemberRepository
                 .save(member);
+
+        auditLogService.log(
+                currentUser,
+                project,
+                "ROLE_UPDATED",
+                request.role().name()
+        );
     }
 
     public void removeMember(
@@ -277,6 +305,18 @@ public class ProjectService {
             );
         }
 
+        Project project =
+                projectRepository
+                        .findById(projectId)
+                        .orElseThrow();
+
         projectMemberRepository.delete(member);
+
+        auditLogService.log(
+                currentUser,
+                project,
+                "MEMBER_REMOVED",
+                targetUser.getEmail()
+        );
     }
 }

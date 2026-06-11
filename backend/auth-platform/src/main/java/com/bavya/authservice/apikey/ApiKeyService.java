@@ -1,6 +1,7 @@
 package com.bavya.authservice.apikey;
 
 import com.bavya.authservice.apikey.*;
+import com.bavya.authservice.audit.AuditLogService;
 import com.bavya.authservice.project.*;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
@@ -24,6 +25,7 @@ public class ApiKeyService {
     private final ProjectMemberRepository projectMemberRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuditLogService auditLogService;
 
     private String generateKey() {
 
@@ -91,6 +93,13 @@ public class ApiKeyService {
         );
 
         apiKeyRepository.save(apiKey);
+
+        auditLogService.log(
+                currentUser,
+                project,
+                "API_KEY_CREATED",
+                apiKey.getName()
+        );
 
         return new ApiKeyResponse(
                 apiKey.getId(),
@@ -192,7 +201,19 @@ public class ApiKeyService {
             );
         }
 
+        Project project =
+                projectRepository
+                        .findById(projectId)
+                        .orElseThrow();
+
         apiKeyRepository.delete(apiKey);
+
+        auditLogService.log(
+                currentUser,
+                project,
+                "API_KEY_DELETED",
+                apiKey.getName()
+        );
     }
 
     public Project validateApiKey(
