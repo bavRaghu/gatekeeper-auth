@@ -1,7 +1,6 @@
 package com.bavya.authservice.config;
 
 import com.bavya.authservice.apikey.ApiKeyAuthenticationFilter;
-import com.bavya.authservice.auth.OAuth2SuccessHandler;
 import com.bavya.authservice.jwt.JwtAuthenticationFilter;
 import com.bavya.authservice.ratelimit.RateLimitFilter;
 import org.springframework.context.annotation.Bean;
@@ -19,13 +18,11 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final ApiKeyAuthenticationFilter apiKeyAuthenticationFilter;
     private final RateLimitFilter rateLimitFilter;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, ApiKeyAuthenticationFilter apiKeyAuthenticationFilter, RateLimitFilter rateLimitFilter, OAuth2SuccessHandler oAuth2SuccessHandler) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, ApiKeyAuthenticationFilter apiKeyAuthenticationFilter, RateLimitFilter rateLimitFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.apiKeyAuthenticationFilter = apiKeyAuthenticationFilter;
         this.rateLimitFilter = rateLimitFilter;
-        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
     }
 
     @Bean
@@ -46,9 +43,10 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated()
-                ).oauth2Login(oauth ->
-                        oauth.successHandler(
-                                oAuth2SuccessHandler
+                ).oauth2Login(oauth -> oauth
+                        .defaultSuccessUrl(
+                                "/api/health",
+                                true
                         )
                 );
 
