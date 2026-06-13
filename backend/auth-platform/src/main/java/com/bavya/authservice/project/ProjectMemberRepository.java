@@ -11,6 +11,8 @@ public interface ProjectMemberRepository
 
     List<ProjectMember> findByProjectId(Long projectId);
 
+    List<ProjectMember> findByUser(User user);
+
     Optional<ProjectMember> findByProjectIdAndUser(
             Long projectId,
             User user

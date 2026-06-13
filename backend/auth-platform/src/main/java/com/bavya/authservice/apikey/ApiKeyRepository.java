@@ -13,4 +13,6 @@ public interface ApiKeyRepository
     List<ApiKey> findByProject(
             Project project
     );
+
+    List<ApiKey> findByProjectId(Long projectId);
 }
