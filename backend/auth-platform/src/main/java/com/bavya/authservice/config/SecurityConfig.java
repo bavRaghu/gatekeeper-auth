@@ -28,27 +28,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/signup",
-                                "/api/auth/login",
-                                "/api/auth/refresh",
-                                "/api/auth/logout",
-                                "/api/health",
-                                "/api/client/**",
-                                "/oauth2/**",
-                                "/login/**"
-                        )
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
-                ).oauth2Login(oauth -> oauth
-                        .defaultSuccessUrl(
-                                "/api/health",
-                                true
-                        )
-                );
+        http.cors(Customizer.withDefaults())
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(
+                            "/api/auth/signup",
+                            "/api/auth/login",
+                            "/api/auth/refresh",
+                            "/api/auth/logout",
+                            "/api/health",
+                            "/api/client/**",
+                            "/oauth2/**",
+                            "/login/**"
+                    )
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            ).oauth2Login(oauth -> oauth
+                    .defaultSuccessUrl(
+                            "/api/health",
+                            true
+                    )
+            );
 
         http.addFilterBefore(
                 jwtAuthenticationFilter,
