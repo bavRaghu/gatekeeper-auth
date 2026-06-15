@@ -16,6 +16,59 @@ export default function ProjectPage({
       null
     );
 
+  const [newKeyName, setNewKeyName] =
+    useState("");
+
+  async function createApiKey() {
+    const { id } =
+      await params;
+
+    const token =
+      localStorage.getItem("token");
+
+    await fetch(
+      `http://localhost:8081/api/projects/${id}/api-keys`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: newKeyName,
+        }),
+      }
+    );
+
+    window.location.reload();
+  }
+
+  async function deleteApiKey(
+    apiKeyId: number
+  ) {
+
+    const { id } =
+      await params;
+
+    const token =
+      localStorage.getItem("token");
+
+    await fetch(
+      `http://localhost:8081/api/projects/${id}/api-keys/${apiKeyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+        },
+      }
+    );
+
+    window.location.reload();
+  }
+
   useEffect(() => {
 
     async function loadProject() {
@@ -137,6 +190,38 @@ export default function ProjectPage({
 
       </div>
 
+      <div className="flex gap-2 mb-4">
+
+        <input
+          value={newKeyName}
+          onChange={(e) =>
+            setNewKeyName(
+              e.target.value
+            )
+          }
+          placeholder="deployment"
+          className="
+            border
+            rounded
+            px-3
+            py-2
+          "
+        />
+
+        <button
+          onClick={createApiKey}
+          className="
+            border
+            rounded
+            px-4
+            py-2
+          "
+        >
+          Create
+        </button>
+
+      </div>
+
       <div>
 
         <h2
@@ -166,9 +251,29 @@ export default function ProjectPage({
                   p-4
                   border-b
                   last:border-b-0
+                  flex
+                  justify-between
+                  items-center
                 "
               >
-                {apiKey.name}
+                <div>
+                    {apiKey.name}
+                </div>
+                <button
+                  onClick={() =>
+                    deleteApiKey(
+                      apiKey.id
+                    )
+                  }
+                  className="
+                        border
+                        rounded
+                        px-3
+                        py-1
+                      "
+                >
+                  Delete
+                </button>
               </div>
 
             )
