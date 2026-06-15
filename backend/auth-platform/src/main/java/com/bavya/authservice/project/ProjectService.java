@@ -1,6 +1,12 @@
 package com.bavya.authservice.project;
 
+import com.bavya.authservice.apikey.ApiKey;
+import com.bavya.authservice.apikey.ApiKeyRepository;
+import com.bavya.authservice.apikey.ApiKeySummary;
+import com.bavya.authservice.audit.AuditLog;
+import com.bavya.authservice.audit.AuditLogRepository;
 import com.bavya.authservice.audit.AuditLogService;
+import com.bavya.authservice.dashboard.ActivityResponse;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +22,8 @@ public class ProjectService {
     private final UserRepository userRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final AuditLogService auditLogService;
+    private final ApiKeyRepository apiKeyRepository;
+    private final AuditLogRepository auditLogRepository;
 
     public ProjectResponse createProject(
             CreateProjectRequest request
@@ -317,6 +325,93 @@ public class ProjectService {
                 project,
                 "MEMBER_REMOVED",
                 targetUser.getEmail()
+        );
+    }
+
+    public ProjectDetailsResponse getProject(
+            Long projectId,
+            User user
+    ) {
+
+        ProjectMember currentUser =
+                projectMemberRepository
+                        .findByProjectIdAndUser(
+                                projectId,
+                                user
+                        )
+                        .orElseThrow();
+
+        Project project =
+                currentUser.getProject();
+
+        List<ProjectMember> members =
+                projectMemberRepository
+                        .findByProjectId(projectId);
+
+        List<ApiKey> apiKeys =
+                apiKeyRepository
+                        .findByProjectId(projectId);
+
+        List<AuditLog> logs =
+                auditLogRepository
+                        .findTop10ByProjectIdOrderByCreatedAtDesc(
+                                projectId
+                        );
+
+        String ownerEmail =
+                members.stream()
+                        .filter(member ->
+                                member.getRole()
+                                        .name()
+                                        .equals("OWNER"))
+                        .findFirst()
+                        .map(member ->
+                                member.getUser()
+                                        .getEmail())
+                        .orElse("Unknown");
+
+        List<ProjectMemberSummary>
+                memberResponses =
+                members.stream()
+                        .map(member ->
+                                new ProjectMemberSummary(
+                                        member.getUser()
+                                                .getId(),
+                                        member.getUser()
+                                                .getEmail(),
+                                        member.getRole()
+                                                .name()
+                                ))
+                        .toList();
+
+        List<ApiKeySummary>
+                apiKeyResponses =
+                apiKeys.stream()
+                        .map(apiKey ->
+                                new ApiKeySummary(
+                                        apiKey.getId(),
+                                        apiKey.getName()
+                                ))
+                        .toList();
+
+        List<ActivityResponse>
+                activities =
+                logs.stream()
+                        .map(log ->
+                                new ActivityResponse(
+                                        log.getAction(),
+                                        log.getDetails(),
+                                        log.getCreatedAt()
+                                ))
+                        .toList();
+
+        return new ProjectDetailsResponse(
+                project.getId(),
+                project.getName(),
+                ownerEmail,
+                memberResponses,
+                apiKeyResponses,
+                activities
         );
     }
 }

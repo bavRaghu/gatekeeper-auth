@@ -1,9 +1,10 @@
 package com.bavya.authservice.project;
 
-import com.bavya.authservice.user.User;
+import com.bavya.authservice.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -11,6 +12,7 @@ import java.util.*;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final UserRepository userRepository;
 
     @GetMapping
     public List<ProjectResponse> getProjects() {
@@ -67,6 +69,25 @@ public class ProjectController {
         projectService.removeMember(
                 projectId,
                 userId
+        );
+    }
+
+    @GetMapping("/{projectId}")
+    public ProjectDetailsResponse getProject(
+            @PathVariable Long projectId,
+            Authentication authentication
+    ) {
+
+        User user =
+                userRepository
+                        .findByEmail(
+                                authentication.getName()
+                        )
+                        .orElseThrow();
+
+        return projectService.getProject(
+                projectId,
+                user
         );
     }
 }

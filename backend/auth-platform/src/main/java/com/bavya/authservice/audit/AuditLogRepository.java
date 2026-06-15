@@ -7,4 +7,8 @@ import java.util.List;
 public interface AuditLogRepository
         extends JpaRepository<AuditLog, Long> {
     List<AuditLog> findTop10ByOrderByCreatedAtDesc();
+    List<AuditLog>
+    findTop10ByProjectIdOrderByCreatedAtDesc(
+            Long projectId
+    );
 }
