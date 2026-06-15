@@ -19,6 +19,12 @@ export default function ProjectPage({
   const [newKeyName, setNewKeyName] =
     useState("");
 
+  const [memberEmail, setMemberEmail] =
+    useState("");
+
+  const [memberRole, setMemberRole] =
+    useState("MEMBER");
+
   async function createApiKey() {
     const { id } =
       await params;
@@ -57,6 +63,90 @@ export default function ProjectPage({
 
     await fetch(
       `http://localhost:8081/api/projects/${id}/api-keys/${apiKeyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+        },
+      }
+    );
+
+    window.location.reload();
+  }
+
+  async function addMember() {
+
+    const { id } =
+      await params;
+
+    const token =
+      localStorage.getItem("token");
+
+    await fetch(
+      `http://localhost:8081/api/projects/${id}/members`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: memberEmail,
+          role: memberRole,
+        }),
+      }
+    );
+
+    setMemberEmail("");
+
+    window.location.reload();
+  }
+
+  async function updateRole(
+    userId: number,
+    role: string
+  ) {
+
+    const { id } =
+      await params;
+
+    const token =
+      localStorage.getItem("token");
+
+    await fetch(
+      `http://localhost:8081/api/projects/${id}/members/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          role,
+        }),
+      }
+    );
+
+    window.location.reload();
+  }
+
+  async function removeMember(
+    userId: number
+  ) {
+
+    const { id } =
+      await params;
+
+    const token =
+      localStorage.getItem("token");
+
+    await fetch(
+      `http://localhost:8081/api/projects/${id}/members/${userId}`,
       {
         method: "DELETE",
         headers: {
@@ -136,6 +226,71 @@ export default function ProjectPage({
 
       </div>
 
+      <div
+        className="
+          flex
+          gap-2
+          mb-4
+        "
+      >
+
+        <input
+          value={memberEmail}
+          onChange={(e) =>
+            setMemberEmail(
+              e.target.value
+            )
+          }
+          placeholder="user@gmail.com"
+          className="
+            border
+            rounded
+            px-3
+            py-2
+          "
+        />
+
+        <select
+          value={memberRole}
+          onChange={(e) =>
+            setMemberRole(
+              e.target.value
+            )
+          }
+          className="
+            border
+            rounded
+            px-3
+            py-2
+          "
+        >
+          <option value="MEMBER">
+            MEMBER
+          </option>
+
+          <option value="ADMIN">
+            ADMIN
+          </option>
+
+          <option value="OWNER">
+            OWNER
+          </option>
+        </select>
+
+        <button
+          onClick={addMember}
+          className="
+            border
+            rounded
+            px-4
+            py-2
+          "
+        >
+          Add Member
+        </button>
+
+      </div>
+
       <div>
 
         <h2
@@ -156,17 +311,22 @@ export default function ProjectPage({
           "
         >
 
-          {project.members.map(
-            member => (
+        {project.members.map(
+          member => (
 
-              <div
-                key={member.id}
-                className="
-                  p-4
-                  border-b
-                  last:border-b-0
-                "
-              >
+            <div
+              key={member.id}
+              className="
+                p-4
+                border-b
+                last:border-b-0
+                flex
+                justify-between
+                items-center
+              "
+            >
+
+              <div>
 
                 <div>
                   {member.email}
@@ -183,8 +343,70 @@ export default function ProjectPage({
 
               </div>
 
-            )
-          )}
+              <div
+                className="
+                  flex
+                  gap-2
+                "
+              >
+
+                <select
+                  defaultValue={member.role}
+                  onChange={(e) =>
+                    updateRole(
+                      member.id,
+                      e.target.value
+                    )
+                  }
+                  className="
+                    border
+                    rounded
+                    px-2
+                  "
+                >
+                  <option value="VIEWER">
+                    MEMBER
+                  </option>
+
+                  <option value="VIEWER">
+                    VIEWER
+                  </option>
+
+                  <option value="DEVELOPER">
+                    DEVELOPER
+                  </option>
+
+                  <option value="ADMIN">
+                    ADMIN
+                  </option>
+
+                  <option value="OWNER">
+                    OWNER
+                  </option>
+                </select>
+
+                <button
+                  onClick={() =>
+                    removeMember(
+                      member.id
+                    )
+                  }
+                  className="
+                    border
+                    rounded
+                    px-3
+                    py-1
+                  "
+                >
+                  Remove
+                </button>
+
+              </div>
+
+            </div>
+
+          )
+        )}
 
         </div>
 
