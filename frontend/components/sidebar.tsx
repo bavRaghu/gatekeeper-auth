@@ -27,13 +27,6 @@ export default function Sidebar() {
         </Link>
 
         <Link
-          href="/api-keys"
-          className="block p-2 rounded hover:bg-gray-100"
-        >
-          API Keys
-        </Link>
-
-        <Link
           href="/audit-logs"
           className="block p-2 rounded hover:bg-gray-100"
         >
