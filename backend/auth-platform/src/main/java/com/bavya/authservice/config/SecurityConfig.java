@@ -39,7 +39,8 @@ public class SecurityConfig {
                             "/api/health",
                             "/api/client/**",
                             "/oauth2/**",
-                            "/login/**"
+                            "/login/**",
+                            "/api/audit-logs"
                     )
                     .permitAll()
                     .anyRequest()
