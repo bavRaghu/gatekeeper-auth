@@ -23,7 +23,7 @@ export default function ProjectPage({
     useState("");
 
   const [memberRole, setMemberRole] =
-    useState("MEMBER");
+    useState("VIEWER");
 
   async function createApiKey() {
     const { id } =
@@ -226,6 +226,19 @@ export default function ProjectPage({
 
       </div>
 
+      <div>
+
+        <h2
+          className="
+            text-xl
+            font-semibold
+            mb-4
+          "
+        >
+          Members
+        </h2>
+
+
       <div
         className="
           flex
@@ -264,8 +277,13 @@ export default function ProjectPage({
             py-2
           "
         >
-          <option value="MEMBER">
-            MEMBER
+          <option value="VIEWER">
+            VIEWER
+          </option>
+
+
+          <option value="DEVELOPER">
+            DEVELOPER
           </option>
 
           <option value="ADMIN">
@@ -291,17 +309,6 @@ export default function ProjectPage({
 
       </div>
 
-      <div>
-
-        <h2
-          className="
-            text-xl
-            font-semibold
-            mb-4
-          "
-        >
-          Members
-        </h2>
 
         <div
           className="
@@ -364,9 +371,6 @@ export default function ProjectPage({
                     px-2
                   "
                 >
-                  <option value="VIEWER">
-                    MEMBER
-                  </option>
 
                   <option value="VIEWER">
                     VIEWER
@@ -412,37 +416,6 @@ export default function ProjectPage({
 
       </div>
 
-      <div className="flex gap-2 mb-4">
-
-        <input
-          value={newKeyName}
-          onChange={(e) =>
-            setNewKeyName(
-              e.target.value
-            )
-          }
-          placeholder="deployment"
-          className="
-            border
-            rounded
-            px-3
-            py-2
-          "
-        />
-
-        <button
-          onClick={createApiKey}
-          className="
-            border
-            rounded
-            px-4
-            py-2
-          "
-        >
-          Create
-        </button>
-
-      </div>
 
       <div>
 
@@ -455,6 +428,39 @@ export default function ProjectPage({
         >
           API Keys
         </h2>
+
+              <div className="flex gap-2 mb-4">
+
+                <input
+                  value={newKeyName}
+                  onChange={(e) =>
+                    setNewKeyName(
+                      e.target.value
+                    )
+                  }
+                  placeholder="deployment"
+                  className="
+                    border
+                    rounded
+                    px-3
+                    py-2
+                  "
+                />
+
+                <button
+                  onClick={createApiKey}
+                  className="
+                    border
+                    rounded
+                    px-4
+                    py-2
+                  "
+                >
+                  Create
+                </button>
+
+              </div>
+
 
         <div
           className="
