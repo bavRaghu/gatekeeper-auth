@@ -246,4 +246,23 @@ public class ApiKeyService {
                 "Invalid API key"
         );
     }
+
+    public List<ApiKeyInventoryResponse>
+    getAllApiKeys() {
+
+        return apiKeyRepository
+                .findAll()
+                .stream()
+                .map(apiKey ->
+                        new ApiKeyInventoryResponse(
+                                apiKey.getId(),
+                                apiKey.getName(),
+                                apiKey.getProject()
+                                        .getName(),
+                                apiKey.getCreatedAt(),
+                                apiKey.getLastUsedAt()
+                        )
+                )
+                .toList();
+    }
 }

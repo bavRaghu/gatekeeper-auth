@@ -6,12 +6,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ApiKeyController {
     private final ApiKeyService apiKeyService;
 
-    @PostMapping("/{projectId}/api-keys")
+    @GetMapping("/api-keys")
+    public List<ApiKeyInventoryResponse>
+    getAllApiKeys() {
+
+        return apiKeyService
+                .getAllApiKeys();
+    }
+
+    @PostMapping("/projects/{projectId}/api-keys")
     public ApiKeyResponse createApiKey(
             @PathVariable Long projectId,
             @RequestBody CreateApiKeyRequest request
@@ -22,7 +30,7 @@ public class ApiKeyController {
         );
     }
 
-    @GetMapping("/{projectId}/api-keys")
+    @GetMapping("/projects/{projectId}/api-keys")
     public List<ApiKeySummaryResponse> getApiKeys(
             @PathVariable Long projectId
     ) {
@@ -31,7 +39,7 @@ public class ApiKeyController {
                 .getApiKeys(projectId);
     }
 
-    @DeleteMapping("/{projectId}/api-keys/{apiKeyId}")
+    @DeleteMapping("/projects/{projectId}/api-keys/{apiKeyId}")
     public void deleteApiKey(
             @PathVariable Long projectId,
             @PathVariable Long apiKeyId

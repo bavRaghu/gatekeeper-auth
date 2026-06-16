@@ -40,7 +40,8 @@ public class SecurityConfig {
                             "/api/client/**",
                             "/oauth2/**",
                             "/login/**",
-                            "/api/audit-logs"
+                            "/api/audit-logs",
+                            "/api/api-keys"
                     )
                     .permitAll()
                     .anyRequest()
