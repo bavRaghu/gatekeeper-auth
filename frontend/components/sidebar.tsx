@@ -3,44 +3,90 @@
 import Link from "next/link";
 
 export default function Sidebar() {
-  return (
-    <aside className="w-64 border-r min-h-screen p-4">
 
-      <h1 className="text-2xl font-bold mb-8">
+  return (
+
+    <aside
+      className="
+        w-72
+        min-h-screen
+        bg-[#2F3E46]
+        text-white
+        p-6
+      "
+    >
+
+      <h1
+        className="
+          text-3xl
+          font-bold
+          mb-10
+        "
+      >
         GateKeeper
       </h1>
 
-      <nav className="space-y-2">
+      <nav
+        className="
+          space-y-2
+        "
+      >
 
         <Link
           href="/dashboard"
-          className="block p-2 rounded hover:bg-gray-100"
+          className="
+            block
+            p-3
+            rounded-xl
+            hover:bg-[#354F52]
+            transition
+          "
         >
           Dashboard
         </Link>
 
         <Link
           href="/projects"
-          className="block p-2 rounded hover:bg-gray-100"
+          className="
+            block
+            p-3
+            rounded-xl
+            hover:bg-[#354F52]
+            transition
+          "
         >
           Projects
         </Link>
 
         <Link
           href="/api-keys"
-          className="block p-2 rounded hover:bg-gray-100"
+          className="
+            block
+            p-3
+            rounded-xl
+            hover:bg-[#354F52]
+            transition
+          "
         >
           API Keys
         </Link>
 
         <Link
           href="/audit-logs"
-          className="block p-2 rounded hover:bg-gray-100"
+          className="
+            block
+            p-3
+            rounded-xl
+            hover:bg-[#354F52]
+            transition
+          "
         >
           Audit Logs
         </Link>
 
       </nav>
+
     </aside>
+
   );
 }
