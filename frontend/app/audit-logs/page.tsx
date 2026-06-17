@@ -5,6 +5,14 @@ import { useEffect, useState } from "react";
 import { AuditLog }
   from "@/types/audit-log";
 
+import Navbar from "@/components/navbar";
+
+import {
+  ScrollText,
+  FolderKanban,
+  Activity,
+} from "lucide-react";
+
 export default function AuditLogsPage() {
 
   const [logs, setLogs] =
@@ -109,103 +117,154 @@ export default function AuditLogsPage() {
   }
 
   return (
-    <div className="p-8">
 
-      <h1
-        className="
-          text-3xl
-          font-bold
-          mb-8
-        "
-      >
-        Audit Logs
-      </h1>
+  <>
+    <Navbar />
+
+    <div
+      className="
+        min-h-screen
+        bg-[#CAD2C5]
+        text-[#2F3E46]
+        p-10
+      "
+    >
+
+      <div className="mb-12">
+
+        <p
+          className="
+            uppercase
+            tracking-[0.3em]
+            text-[#52796F]
+            mb-4
+          "
+        >
+          Audit Logs
+        </p>
+
+        <h1
+          className="
+            text-6xl
+            font-black
+            mb-4
+          "
+        >
+          Track everything.
+        </h1>
+
+        <p
+          className="
+            text-xl
+            text-[#354F52]
+            max-w-3xl
+          "
+        >
+          Monitor activity,
+          member actions and
+          API key events across
+          your projects.
+        </p>
+
+      </div>
 
       <div
         className="
           grid
-          grid-cols-3
-          gap-4
-          mb-8
+          md:grid-cols-3
+          gap-8
+          mb-12
         "
       >
 
         <div
           className="
+            bg-[#84A98C]/30
             border
-            rounded-lg
-            p-4
+            border-[#84A98C]
+            rounded-3xl
+            p-8
           "
         >
-          <div
-            className="
-              text-sm
-              text-gray-500
-            "
-          >
-            Total Events
-          </div>
+
+          <ScrollText
+            size={36}
+            className="mb-4"
+          />
 
           <div
             className="
-              text-2xl
-              font-bold
+              text-5xl
+              font-black
             "
           >
             {logs.length}
           </div>
+
+          <div className="mt-2">
+            Total Events
+          </div>
+
         </div>
 
         <div
           className="
+            bg-[#84A98C]/30
             border
-            rounded-lg
-            p-4
+            border-[#84A98C]
+            rounded-3xl
+            p-8
           "
         >
-          <div
-            className="
-              text-sm
-              text-gray-500
-            "
-          >
-            Projects
-          </div>
+
+          <FolderKanban
+            size={36}
+            className="mb-4"
+          />
 
           <div
             className="
-              text-2xl
-              font-bold
+              text-5xl
+              font-black
             "
           >
             {projects.length}
           </div>
+
+          <div className="mt-2">
+            Projects Impacted
+          </div>
+
         </div>
 
         <div
           className="
+            bg-[#84A98C]/30
             border
-            rounded-lg
-            p-4
+            border-[#84A98C]
+            rounded-3xl
+            p-8
           "
         >
-          <div
-            className="
-              text-sm
-              text-gray-500
-            "
-          >
-            Actions
-          </div>
+
+          <Activity
+            size={36}
+            className="mb-4"
+          />
 
           <div
             className="
-              text-2xl
-              font-bold
+              text-5xl
+              font-black
             "
           >
             {actions.length}
           </div>
+
+          <div className="mt-2">
+            Event Types
+          </div>
+
         </div>
 
       </div>
@@ -213,8 +272,9 @@ export default function AuditLogsPage() {
       <div
         className="
           flex
+          flex-wrap
           gap-4
-          mb-8
+          mb-12
         "
       >
 
@@ -227,10 +287,12 @@ export default function AuditLogsPage() {
           }
           placeholder="Search..."
           className="
+            rounded-xl
             border
-            rounded
-            px-3
-            py-2
+            border-[#84A98C]
+            bg-[#CAD2C5]
+            px-4
+            py-3
           "
         />
 
@@ -242,10 +304,12 @@ export default function AuditLogsPage() {
             )
           }
           className="
+            rounded-xl
             border
-            rounded
-            px-3
-            py-2
+            border-[#84A98C]
+            bg-[#CAD2C5]
+            px-4
+            py-3
           "
         >
 
@@ -274,10 +338,12 @@ export default function AuditLogsPage() {
             )
           }
           className="
+            rounded-xl
             border
-            rounded
-            px-3
-            py-2
+            border-[#84A98C]
+            bg-[#CAD2C5]
+            px-4
+            py-3
           "
         >
 
@@ -300,22 +366,18 @@ export default function AuditLogsPage() {
 
       </div>
 
-      <div
-        className="
-          border
-          rounded-lg
-          overflow-hidden
-        "
-      >
+      <div className="space-y-4">
 
-        {filteredLogs.map((log) => (
+        {filteredLogs.map(log => (
 
           <div
             key={log.id}
             className="
-              p-4
-              border-b
-              last:border-b-0
+              rounded-3xl
+              border
+              border-[#84A98C]
+              bg-[#84A98C]/20
+              p-6
             "
           >
 
@@ -324,6 +386,7 @@ export default function AuditLogsPage() {
                 flex
                 justify-between
                 items-start
+                mb-4
               "
             >
 
@@ -331,7 +394,8 @@ export default function AuditLogsPage() {
 
                 <div
                   className="
-                    font-semibold
+                    text-xl
+                    font-bold
                   "
                 >
                   {log.action}
@@ -339,8 +403,8 @@ export default function AuditLogsPage() {
 
                 <div
                   className="
-                    text-sm
-                    text-gray-500
+                    text-[#52796F]
+                    mt-1
                   "
                 >
                   {log.projectName}
@@ -350,20 +414,24 @@ export default function AuditLogsPage() {
 
               <div
                 className="
-                  text-xs
-                  text-gray-500
+                  text-sm
+                  text-[#52796F]
                 "
               >
-                {new Date(
-                  log.createdAt
-                ).toLocaleString()}
+                {
+                  new Date(
+                    log.createdAt
+                  )
+                  .toLocaleString()
+                }
               </div>
 
             </div>
 
             <div
               className="
-                mt-2
+                text-[#354F52]
+                mb-4
               "
             >
               {log.details}
@@ -371,9 +439,8 @@ export default function AuditLogsPage() {
 
             <div
               className="
-                mt-2
                 text-sm
-                text-gray-500
+                text-[#52796F]
               "
             >
               by {log.userEmail}
@@ -386,5 +453,8 @@ export default function AuditLogsPage() {
       </div>
 
     </div>
+
+  </>
+
   );
 }
