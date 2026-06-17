@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Navbar from "@/components/navbar";
 
 import {
   Card,
@@ -51,7 +52,12 @@ export default function DashboardPage() {
       </div>
     );
   }
+
   return (
+
+
+    <>
+    <Navbar />
 
     <div
       className="
@@ -403,6 +409,9 @@ export default function DashboardPage() {
       </div>
 
     </div>
+
+
+  </>
 
   );
 }
