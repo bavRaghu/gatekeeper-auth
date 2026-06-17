@@ -10,8 +10,11 @@ import com.bavya.authservice.dashboard.ActivityResponse;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.*;
 
 @Service
@@ -24,6 +27,27 @@ public class ProjectService {
     private final AuditLogService auditLogService;
     private final ApiKeyRepository apiKeyRepository;
     private final AuditLogRepository auditLogRepository;
+
+    private void verifyProjectAccess(
+            Long project,
+            User user
+    ) {
+
+        boolean hasAccess =
+                projectMemberRepository
+                        .existsByProjectIdAndUser(
+                                project,
+                                user
+                        );
+
+        if (!hasAccess) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Access denied"
+            );
+        }
+    }
 
     public ProjectResponse createProject(
             CreateProjectRequest request
@@ -79,6 +103,8 @@ public class ProjectService {
         User owner =
                 userRepository.findByEmail(email)
                         .orElseThrow();
+
+        System.out.println("curr user: "+ email);
 
         return projectRepository
                 .findByOwner(owner)

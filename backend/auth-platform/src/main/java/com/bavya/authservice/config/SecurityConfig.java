@@ -48,7 +48,7 @@ public class SecurityConfig {
                     .authenticated()
             ).oauth2Login(oauth -> oauth
                     .defaultSuccessUrl(
-                            "/api/health",
+                            "http://localhost:3000/dashboard",
                             true
                     )
             );

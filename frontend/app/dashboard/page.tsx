@@ -12,6 +12,13 @@ import {
 import { DashboardResponse }
   from "@/types/dashboard";
 
+import {
+  FolderKanban,
+  KeyRound,
+  ScrollText,
+  ArrowRight,
+} from "lucide-react";
+
 export default function DashboardPage() {
 
   const [data, setData] =
@@ -44,96 +51,358 @@ export default function DashboardPage() {
       </div>
     );
   }
-
   return (
-    <div className="min-h-screen bg-background p-8">
 
-      <h1 className="text-4xl font-bold mb-8">
-        GateKeeper
-      </h1>
+    <div
+      className="
+        min-h-screen
+        bg-[#CAD2C5]
+        text-[#2F3E46]
+        p-10
+      "
+    >
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="mb-12">
 
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              Projects
-            </CardTitle>
-          </CardHeader>
+        <p
+          className="
+            uppercase
+            tracking-[0.3em]
+            text-[#52796F]
+            mb-4
+          "
+        >
+          Dashboard
+        </p>
 
-          <CardContent>
-            <div className="text-3xl font-bold">
+        <h1
+          className="
+            text-6xl
+            font-black
+            mb-4
+          "
+        >
+          Welcome back.
+        </h1>
+
+        <p
+          className="
+            text-xl
+            text-[#354F52]
+          "
+        >
+          Here's what's happening
+          across your projects.
+        </p>
+
+      </div>
+
+      <div
+        className="
+          grid
+          md:grid-cols-3
+          gap-8
+          mb-12
+        "
+      >
+
+        <Card
+          className="
+            bg-[#84A98C]/30
+            border-[#84A98C]
+            rounded-3xl
+          "
+        >
+
+          <CardContent className="p-8">
+
+            <FolderKanban
+              size={36}
+              className="mb-6"
+            />
+
+            <div
+              className="
+                text-5xl
+                font-black
+              "
+            >
               {data.projects}
             </div>
+
+            <div
+              className="
+                mt-2
+                text-lg
+              "
+            >
+              Projects
+            </div>
+
           </CardContent>
+
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              API Keys
-            </CardTitle>
-          </CardHeader>
+        <Card
+          className="
+            bg-[#84A98C]/30
+            border-[#84A98C]
+            rounded-3xl
+          "
+        >
 
-          <CardContent>
-            <div className="text-3xl font-bold">
+          <CardContent className="p-8">
+
+            <KeyRound
+              size={36}
+              className="mb-6"
+            />
+
+            <div
+              className="
+                text-5xl
+                font-black
+              "
+            >
               {data.apiKeys}
             </div>
+
+            <div
+              className="
+                mt-2
+                text-lg
+              "
+            >
+              API Keys
+            </div>
+
           </CardContent>
+
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              Audit Logs
-            </CardTitle>
-          </CardHeader>
+        <Card
+          className="
+            bg-[#84A98C]/30
+            border-[#84A98C]
+            rounded-3xl
+          "
+        >
 
-          <CardContent>
-            <div className="text-3xl font-bold">
+          <CardContent className="p-8">
+
+            <ScrollText
+              size={36}
+              className="mb-6"
+            />
+
+            <div
+              className="
+                text-5xl
+                font-black
+              "
+            >
               {data.auditLogs}
             </div>
+
+            <div
+              className="
+                mt-2
+                text-lg
+              "
+            >
+              Audit Events
+            </div>
+
           </CardContent>
+
         </Card>
 
       </div>
 
-      <Card className="mt-8">
+      <div
+        className="
+          grid
+          lg:grid-cols-3
+          gap-8
+        "
+      >
 
-        <CardHeader>
-          <CardTitle>
-            Recent Activity
-          </CardTitle>
-        </CardHeader>
+        <Card
+          className="
+            lg:col-span-2
+            rounded-3xl
+            border-[#84A98C]
+          "
+        >
 
-        <CardContent>
+          <CardHeader>
 
-          <div className="space-y-4">
+            <CardTitle
+              className="
+                text-2xl
+              "
+            >
+              Recent Activity
+            </CardTitle>
 
-            {data.recentActivity.map(
-              (activity, index) => (
+          </CardHeader>
 
-                <div
-                  key={index}
-                  className="border-b pb-3"
-                >
-                  <div className="font-medium">
-                    {activity.action}
+          <CardContent>
+
+            <div className="space-y-4">
+
+              {data.recentActivity.map(
+                (
+                  activity,
+                  index
+                ) => (
+
+                  <div
+                    key={index}
+                    className="
+                      p-4
+                      rounded-2xl
+                      bg-[#84A98C]/20
+                    "
+                  >
+
+                    <div
+                      className="
+                        font-semibold
+                      "
+                    >
+                      {activity.action}
+                    </div>
+
+                    <div
+                      className="
+                        text-[#354F52]
+                        mt-1
+                      "
+                    >
+                      {activity.details}
+                    </div>
+
+                    <div
+                      className="
+                        text-xs
+                        text-[#52796F]
+                        mt-2
+                      "
+                    >
+                      {
+                        new Date(
+                          activity.timestamp
+                        )
+                        .toLocaleString()
+                      }
+                    </div>
+
                   </div>
 
-                  <div className="text-sm text-gray-500">
-                    {activity.details}
-                  </div>
-                </div>
-              )
-            )}
+                )
+              )}
 
-          </div>
+            </div>
 
-        </CardContent>
+          </CardContent>
 
-      </Card>
+        </Card>
+
+        <Card
+          className="
+            rounded-3xl
+            border-[#84A98C]
+          "
+        >
+
+          <CardHeader>
+
+            <CardTitle>
+              Quick Actions
+            </CardTitle>
+
+          </CardHeader>
+
+          <CardContent>
+
+            <div
+              className="
+                flex
+                flex-col
+                gap-4
+              "
+            >
+
+              <a
+                href="/projects"
+                className="
+                  flex
+                  justify-between
+                  items-center
+                  p-4
+                  rounded-2xl
+                  bg-[#84A98C]/20
+                  hover:bg-[#84A98C]/40
+                  transition
+                "
+              >
+                View Projects
+
+                <ArrowRight
+                  size={18}
+                />
+              </a>
+
+              <a
+                href="/api-keys"
+                className="
+                  flex
+                  justify-between
+                  items-center
+                  p-4
+                  rounded-2xl
+                  bg-[#84A98C]/20
+                  hover:bg-[#84A98C]/40
+                  transition
+                "
+              >
+                API Keys
+
+                <ArrowRight
+                  size={18}
+                />
+              </a>
+
+              <a
+                href="/audit-logs"
+                className="
+                  flex
+                  justify-between
+                  items-center
+                  p-4
+                  rounded-2xl
+                  bg-[#84A98C]/20
+                  hover:bg-[#84A98C]/40
+                  transition
+                "
+              >
+                Audit Logs
+
+                <ArrowRight
+                  size={18}
+                />
+              </a>
+
+            </div>
+
+          </CardContent>
+
+        </Card>
+
+      </div>
 
     </div>
+
   );
 }
