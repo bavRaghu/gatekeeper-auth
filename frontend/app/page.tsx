@@ -131,7 +131,7 @@ export default function Home() {
       </a>
 
       <a
-        href="http://localhost:8081/oauth2/authorization/google"
+        href="/login"
         className="
           px-5
           py-2
@@ -892,7 +892,7 @@ export default function Home() {
           </p>
 
           <a
-            href="http://localhost:8081/oauth2/authorization/google"
+            href="/login"
             className="
               inline-flex
               items-center

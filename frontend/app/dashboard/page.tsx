@@ -25,24 +25,54 @@ export default function DashboardPage() {
   const [data, setData] =
     useState<DashboardResponse>();
 
-  useEffect(() => {
+useEffect(() => {
 
-    const token =
-      localStorage.getItem("token");
+  async function loadDashboard() {
 
-    fetch(
-      "http://localhost:8081/api/dashboard",
-      {
-        headers: {
-          Authorization:
-            `Bearer ${token}`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then(setData);
+    try {
 
-  }, []);
+      const token =
+        localStorage.getItem("token");
+
+      console.log("TOKEN:", token);
+
+      const response =
+        await fetch(
+          "http://localhost:8081/api/dashboard",
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+
+      console.log(
+        "STATUS:",
+        response.status
+      );
+
+      const data =
+        await response.json();
+
+      console.log(data);
+
+      setData(data);
+
+    } catch (error) {
+
+      console.error(
+        "DASHBOARD ERROR:",
+        error
+      );
+
+    }
+
+  }
+
+  loadDashboard();
+
+}, []);
 
   if (!data) {
 

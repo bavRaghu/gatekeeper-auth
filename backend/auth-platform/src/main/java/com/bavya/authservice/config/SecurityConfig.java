@@ -41,7 +41,9 @@ public class SecurityConfig {
                             "/oauth2/**",
                             "/login/**",
                             "/api/audit-logs",
-                            "/api/api-keys"
+                            "/api/api-keys",
+                            "/api/projects/**",
+                            "/api/**"
                     )
                     .permitAll()
                     .anyRequest()
